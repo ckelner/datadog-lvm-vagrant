@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
       # Hacky but it works...
       sudo sh -c "sed 's/api_key:.*/api_key: $APIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
       sudo sh -c "sed 's/# tags:.*/tags: $TAGS/' /etc/dd-agent/datadog.conf > /etc/dd-agent/tmp.conf"
-      sudo sh -c "sed 's/# hostname:.*/tags: $HOSTNAME/' /etc/dd-agent/tmp.conf > /etc/dd-agent/temp.conf"
+      sudo sh -c "sed 's/# hostname:.*/hostname: $HOSTNAME/' /etc/dd-agent/tmp.conf > /etc/dd-agent/temp.conf"
       sudo sh -c "mv /etc/dd-agent/temp.conf /etc/dd-agent/datadog.conf"
       sudo /etc/init.d/datadog-agent start
     fi
