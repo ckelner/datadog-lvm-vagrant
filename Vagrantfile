@@ -59,6 +59,10 @@ Vagrant.configure("2") do |config|
       sudo sh -c "sed 's/# hostname:.*/hostname: $HOSTNAME/' /etc/dd-agent/tmp.conf > /etc/dd-agent/temp.conf"
       sudo sh -c "mv /etc/dd-agent/temp.conf /etc/dd-agent/datadog.conf"
       sudo /etc/init.d/datadog-agent start
+    else
+      echo "No DD_API_KEY set!! Cannot setup Datadog. Please see the README.md."
     fi
+    echo "------------------------------------------"
+    echo "Provisioning Complete!"
   SHELL
 end
