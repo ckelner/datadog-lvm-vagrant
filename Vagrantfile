@@ -7,7 +7,7 @@
 
 Vagrant.configure("2") do |config|
   # Image to use
-  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "ubuntu/precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   # Provider-specific configuration so you can fine-tune various
