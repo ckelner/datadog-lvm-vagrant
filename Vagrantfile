@@ -14,9 +14,9 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
-    file_to_disk = './tmp/large_disk.vdi'
+    file_to_disk = './tmp/disk.vdi'
     unless File.exist?(file_to_disk)
-      vb.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024]
+      vb.customize ['createhd', '--filename', file_to_disk, '--size', 500]
     end
     vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
   end
@@ -26,6 +26,20 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     echo "Provisioning..."
+    echo "------------------------------------------"
+    echo "Setting up LVM..."
+    sudo pvcreate /dev/sdb
+    sudo pvscan
+    sudo pvdisplay
+    sudo vgcreate vol_grp1 /dev/sdb
+    sudo vgdisplay
+    sudo lvcreate -L 400 -n logical_vol1 vol_grp1
+    sudo mkfs.ext3 /dev/vol_grp1/logical_vol1
+    sudo vgchange -ay
+    sudo vgscan
+    sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
+    echo "------------------------------------------"
+    echo "Setting up Datadog..."
     # Get the API Key from the host environment
     APIKEY=#{ENV['DD_API_KEY']}
     # NOTE: Change you values below if you want something different
